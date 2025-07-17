@@ -1,0 +1,38 @@
+using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
+using GeradorDeTestes.WebApp.DependencyInjection;
+using GeradorDeTestes.WebApp.Orm;
+using Microsoft.EntityFrameworkCore;
+
+namespace GeradorDeTestes.WebApp
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddControllersWithViews();
+
+            // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
+
+            builder.Services.AddEntityFrameworkConfig(builder.Configuration);
+
+            var app = builder.Build();
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            app.ApplyMigrations();
+            app.UseAntiforgery();
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.MapDefaultControllerRoute();
+
+            app.Run();
+        }
+    }
+}
