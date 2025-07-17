@@ -1,4 +1,5 @@
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
+using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,10 @@ namespace GeradorDeTestes.WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<LogarAcaoAttribute>();
+            });
 
             // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
 

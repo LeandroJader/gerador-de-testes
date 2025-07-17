@@ -1,8 +1,31 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+    ViewBag.Titulo = "Página Inicial";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<hr />
+<div class="d-flex flex-wrap gap-2 gap-lg-5">
+    <div class="col order-1 order-lg-0 py-lg-5">
+        <h2 class="text-primary fs-1 fw-bold">Bem-vindo(a) ao Gerador de Testes!</h2>
+
+        <p class="fs-4 mt-3">
+            Este sistema foi desenvolvido para facilitar a criação e organização de avaliações escolares com agilidade e praticidade.
+        </p>
+
+        <p class="fs-4 mt-3">
+            Gerencie disciplinas, matérias e questões de forma estruturada. Gere provas personalizadas com questões aleatórias, exporte PDFs e otimize o processo de avaliação.
+        </p>
+
+        <p class="fs-4 mt-4 text-secondary-emphasis">Escolha uma das opções abaixo para começar:</p>
+
+        <div class="d-grid d-lg-flex flex-wrap gap-2">
+            <a href="/disciplinas" class="btn btn-outline-primary fw-semibold px-5 rounded-3">Disciplinas</a>
+            <a href="/materias" class="btn btn-outline-primary fw-semibold px-5 rounded-3">Matérias</a>
+            <a href="/questoes" class="btn btn-outline-primary fw-semibold px-5 rounded-3">Questões</a>
+            <a href="/testes" class="btn btn-outline-primary fw-semibold px-5 rounded-3">Testes</a>
+        </div>
+    </div>
+    <div class="col-lg-4 order-0 order-lg-1">
+        <img src="~/images/test-generator.svg" alt="Ilustração Gerador de Testes" class="img-fluid my-5" />
+    </div>
 </div>
