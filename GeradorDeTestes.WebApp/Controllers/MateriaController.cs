@@ -68,4 +68,57 @@ public class MateriaController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet("editar/{id:guid}")]
+    public IActionResult Editar(Guid id)
+    {
+        var registroSelecionado = repositorioMateria.SelecionarRegistroPorId(id);
+
+        if (registroSelecionado == null)
+            return NotFound();
+
+        var editarVM = new EditarMateriaViewModel(
+            registroSelecionado.Id,
+            registroSelecionado.Nome,
+            registroSelecionado.Disciplina,
+            registroSelecionado.Serie
+        );
+
+        return View(editarVM);
+    }
+
+    [HttpPost("editar/{id:guid}")]
+    public IActionResult Editar(Guid id, EditarMateriaViewModel editarVM)
+    {
+        var registros = repositorioMateria
+            .SelecionarRegistros()
+            .Where(r => r.Id != id);
+
+        if (registros.Any(x => x.Nome.Equals(editarVM.Nome)))
+            ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
+
+        if (!ModelState.IsValid)
+            return View(editarVM);
+
+        var entidade = editarVM.ParaEntidade();
+
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioMateria.EditarRegistro(id, entidade);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }

@@ -32,6 +32,36 @@ public class CadastrarMateriaViewModel : FormularioMateriaViewModel
     }
 }
 
+public class EditarMateriaViewModel : FormularioMateriaViewModel
+{
+    public Guid Id { get; set; }
+
+    public EditarMateriaViewModel() { }
+
+    public EditarMateriaViewModel(
+        Guid id,
+        string nome,
+        string disciplina,
+        Serie serie
+        ) : this()
+    {
+        Id = id;
+        Nome = nome;
+        Disciplina = disciplina;
+        Serie = serie;
+    }
+
+    public Materia ParaEntidade()
+    {
+        return new Materia(
+            Id,
+            Nome,
+            Disciplina,
+            Serie
+        );
+    }
+}
+
 public class VisualizarMateriasViewModel
 {
     public List<DetalhesMateriaViewModel> Registros { get; set; }
