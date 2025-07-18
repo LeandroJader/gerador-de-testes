@@ -62,6 +62,20 @@ public class EditarMateriaViewModel : FormularioMateriaViewModel
     }
 }
 
+public class ExcluirMateriaViewModel
+{
+    public Guid Id { get; set; }
+    public string Nome { get; set; }
+
+    public ExcluirMateriaViewModel() { }
+
+    public ExcluirMateriaViewModel(Guid id, string nome) : this()
+    {
+        Id = id;
+        Nome = nome;
+    }
+}
+
 public class VisualizarMateriasViewModel
 {
     public List<DetalhesMateriaViewModel> Registros { get; set; }

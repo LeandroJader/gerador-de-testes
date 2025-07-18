@@ -11,7 +11,7 @@ public class MateriaController : Controller
 {
     private readonly GeradorDeTestesDbContext contexto;
     private readonly IRepositorioMateria repositorioMateria;
-    
+
     public MateriaController(GeradorDeTestesDbContext contexto, IRepositorioMateria repositorioMateria)
     {
         this.contexto = contexto;
@@ -107,6 +107,42 @@ public class MateriaController : Controller
         try
         {
             repositorioMateria.EditarRegistro(id, entidade);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet("excluir/{id:guid}")]
+    public ActionResult Excluir(Guid id)
+    {
+        var registroSelecionado = repositorioMateria.SelecionarRegistroPorId(id);
+
+        if (registroSelecionado == null)
+            return RedirectToAction(nameof(Index));
+
+        var excluirVM = new ExcluirMateriaViewModel(registroSelecionado.Id, registroSelecionado.Nome);
+
+        return View(excluirVM);
+    }
+
+    [HttpPost("excluir/{id:guid}")]
+    public ActionResult ExcluirConfirmado(Guid id)
+    {
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioMateria.ExcluirRegistro(id);
 
             contexto.SaveChanges();
 
