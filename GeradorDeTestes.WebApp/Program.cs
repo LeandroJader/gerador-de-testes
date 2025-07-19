@@ -1,8 +1,8 @@
-using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
+using GeradorDeTestes.Dominio.ModuloQuestao;
+using GeradorDeTestes.Infraestrutura.Orm.ModuloQuestao;
 using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
-using Microsoft.EntityFrameworkCore;
 
 namespace GeradorDeTestes.WebApp
 {
@@ -18,16 +18,17 @@ namespace GeradorDeTestes.WebApp
             });
 
             // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
+            
+            builder.Services.AddScoped<IRepositorioQuestao, RepositorioQuestaoEmOrm>();
 
             builder.Services.AddEntityFrameworkConfig(builder.Configuration);
 
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+                app.UseExceptionHandler("/erro");
+            else
+                app.UseDeveloperExceptionPage();
 
             app.ApplyMigrations();
             app.UseAntiforgery();
