@@ -1,0 +1,113 @@
+﻿@model CadastrarQuestaoViewModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Cadastro de Questão";
+
+    bool temAlternativaCorreta = Model.Alternativas.Any(a => a.Correta);
+}
+
+<hr />
+<div class="row justify-content-center my-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body p-md-5">
+                <form asp-action="Cadastrar">
+                    <h3>Formulário de Cadastro</h3>
+
+                    @if (ViewData.ModelState["CadastroUnico"]?.Errors.Count > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+                            @ViewData.ModelState["CadastroUnico"]!.Errors.First().ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="form-group d-grid gap-2">
+                        <label asp-for="Enunciado" class="control-label fs-5">Enunciado:</label>
+                        <input asp-for="Enunciado" class="form-control" />
+                        <span asp-validation-for="Enunciado" class="text-danger"></span>
+                    </div>
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="Materia" class="control-label fs-5">Matéria:</label>
+                        <input asp-for="Materia" class="form-control" />
+                        <span asp-validation-for="Materia" class="text-danger"></span>
+                    </div>
+
+                    <h4 class="my-3">Alternativas</h4>
+                    
+                    @if (Model.Alternativas.Count < 4)
+                    {
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <div class="col-12 col-md-7">
+                                <label class="control-label">Alternativa: </label>
+                                <input name="Resposta" class="form-control" />
+                            </div>
+
+                            @if (!temAlternativaCorreta)
+                            {
+                                <span class="d-flex gap-2">
+                                    @Html.CheckBox("Correta", false, new { @class = "form-check-input" })
+                                    <label for="Correta" class="form-check-label">Correta</label>
+                                </span>
+                            }
+
+                            <button type="submit" formaction="/questoes/cadastrar/adicionar-alternativa" class="btn btn-primary align-self-end col">
+                                Adicionar
+                            </button>
+                        </div>
+                    }
+
+                    @for (var i = 0; i < Model.Alternativas.Count; i++)
+                    {
+                        <input type="hidden" asp-for="Alternativas[@i].Letra"/>
+                        <input type="hidden" asp-for="Alternativas[@i].Resposta" />
+                        <input type="hidden" asp-for="Alternativas[@i].Correta" />
+                    }
+
+                    <table class="table table-sm table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>Resposta</th>
+                                <th>Correta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model.Alternativas)
+                            {
+                                <tr>
+                                    <td>@i.Resposta</td>
+
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" readonly disabled type="checkbox" @(i.Correta ? "checked" : "") >
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button class="btn btn-sm btn-danger" type="submit" formaction="/questoes/cadastrar/remover-alternativa/@i.Letra">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
+                        <a href="/questoes">Voltar para a listagem</a>
+                        <button type="submit" class="btn btn-primary px-5">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

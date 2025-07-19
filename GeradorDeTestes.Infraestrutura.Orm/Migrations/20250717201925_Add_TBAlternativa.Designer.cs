@@ -3,6 +3,7 @@ using System;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeTestesDbContext))]
-    partial class GeradorDeTestesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250717201925_Add_TBAlternativa")]
+    partial class Add_TBAlternativa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +28,6 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Correta")

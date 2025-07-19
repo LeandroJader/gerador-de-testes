@@ -1,3 +1,5 @@
+using GeradorDeTestes.Dominio.ModuloQuestao;
+using GeradorDeTestes.Infraestrutura.Orm.ModuloQuestao;
 using GeradorDeTestes.Dominio.ModuloDisciplina;
 using GeradorDeTestes.Dominio.ModuloMateria;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
@@ -6,7 +8,6 @@ using GeradorDeTestes.Infraestrutura.Orm.ModuloMateria;
 using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
-using Microsoft.EntityFrameworkCore;
 
 namespace GeradorDeTestes.WebApp
 {
@@ -26,15 +27,18 @@ namespace GeradorDeTestes.WebApp
             builder.Services.AddScoped<IRepositorioMateria, RepositorioMateriaEmOrm>();
             builder.Services.AddScoped<IRepositorioDisciplina, RepositorioDisciplinaEmOrm>();
 
+            // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
+            
+            builder.Services.AddScoped<IRepositorioQuestao, RepositorioQuestaoEmOrm>();
+
             builder.Services.AddEntityFrameworkConfig(builder.Configuration);
 
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+                app.UseExceptionHandler("/erro");
+            else
+                app.UseDeveloperExceptionPage();
 
             app.ApplyMigrations();
 
