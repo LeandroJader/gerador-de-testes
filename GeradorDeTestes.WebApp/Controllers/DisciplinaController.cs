@@ -29,5 +29,49 @@ public class Disciplina : Controller
 
         return View(visualizarVM);
     }
+    [HttpGet("Cadastrar")]
 
+    public IActionResult Cadastrar()
+    {
+        var CadastarVM = new CadastrarDisciplinaViewModel();
+
+        return View(CadastarVM);
+    }
+
+    [HttpPost("cadastrar")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Cadastrar(CadastrarDisciplinaViewModel cadastrarVM)
+    {
+        var registros = repositorioDisciplina.SelecionarRegistros();
+
+        if (registros.Any(x => x.Nome.Equals(cadastrarVM.Nome)))
+            ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
+
+        if (!ModelState.IsValid)
+            return View(cadastrarVM);
+
+        var entidade = cadastrarVM.ParaEntidade();
+
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioDisciplina.CadastrarRegistro(entidade);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }
+
+ 
+

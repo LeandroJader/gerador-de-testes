@@ -13,7 +13,7 @@ namespace GeradorDeTestes.Dominio.ModuloDisciplina
         public string Nome { get; set;}
         //public Materia Materia { get; set; }
        
-        public Disciplina(string nome, Materia materia) : this ()
+        public Disciplina(string nome) : this ()
         {
             Nome = nome;
             //Materia = materia;
