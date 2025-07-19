@@ -1,5 +1,7 @@
+using GeradorDeTestes.Dominio.ModuloDisciplina;
 using GeradorDeTestes.Dominio.ModuloMateria;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
+using GeradorDeTestes.Infraestrutura.Orm.ModuloDisciplina;
 using GeradorDeTestes.Infraestrutura.Orm.ModuloMateria;
 using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
@@ -14,12 +16,15 @@ namespace GeradorDeTestes.WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
+  
             builder.Services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<LogarAcaoAttribute>();
             });
 
+
             builder.Services.AddScoped<IRepositorioMateria, RepositorioMateriaEmOrm>();
+            builder.Services.AddScoped<IRepositorioDisciplina, RepositorioDisciplinaEmOrm>();
 
             builder.Services.AddEntityFrameworkConfig(builder.Configuration);
 
@@ -32,10 +37,12 @@ namespace GeradorDeTestes.WebApp
             }
 
             app.ApplyMigrations();
+
             app.UseAntiforgery();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();
+
             app.MapDefaultControllerRoute();
 
             app.Run();
