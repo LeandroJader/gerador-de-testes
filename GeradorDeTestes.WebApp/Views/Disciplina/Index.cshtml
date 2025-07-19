@@ -1,0 +1,38 @@
+﻿@using GeradorDeTestes.WebApp.Extensions
+@model VisualizarDisciplinaViewModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Visualização de Disciplinas";
+}
+
+<p>
+    <a class="btn btn-primary px-4" href="/disciplinas/cadastrar">
+        <i class="bi bi-plus"></i>
+        Cadastrar Novo/a
+    </a>
+</p>
+
+<hr />
+
+<div class="d-flex flex-wrap gap-2">
+    @foreach (var item in Model.Registros)
+    {
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text"><span class="fw-semibold">Nome:</span> @item.Nome</p>
+            
+                    <span class="d-flex gap-1 justify-content-end mt-4">
+                        <a href="/materias/editar/@item.Id" class="btn btn-primary rounded-circle">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="/materias/excluir/@item.Id" class="btn btn-danger rounded-circle">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
