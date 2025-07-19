@@ -25,6 +25,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Correta")

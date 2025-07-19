@@ -1,5 +1,8 @@
 using GeradorDeTestes.Dominio.ModuloQuestao;
 using GeradorDeTestes.Infraestrutura.Orm.ModuloQuestao;
+using GeradorDeTestes.Dominio.ModuloMateria;
+using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
+using GeradorDeTestes.Infraestrutura.Orm.ModuloMateria;
 using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
@@ -16,6 +19,8 @@ namespace GeradorDeTestes.WebApp
             {
                 options.Filters.Add<LogarAcaoAttribute>();
             });
+
+            builder.Services.AddScoped<IRepositorioMateria, RepositorioMateriaEmOrm>();
 
             // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
             
