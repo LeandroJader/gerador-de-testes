@@ -3,19 +3,30 @@ using GeradorDeTestes.Dominio.ModuloMateria;
 using GeradorDeTestes.WebApp.Extensions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
 
 namespace GeradorDeTestes.WebApp.Models
 {
     public class FormularioDisciplinaViewModel
     {
+        [Required(ErrorMessage = "O campo \"Nome\" é obrigatório.")]
+        [MinLength(3, ErrorMessage = "O campo \"Nome\" precisa conter ao menos 3 caracteres.")]
+        [MaxLength(100, ErrorMessage = "O campo \"Nome\" precisa conter no máximo 100 caracteres.")]
         public string Nome { get; set; }
 
+    }
 
-        public FormularioDisciplinaViewModel(string nome )
+    public class CadastrarDisciplinaViewModel : FormularioDisciplinaViewModel
+    {
+        public CadastrarDisciplinaViewModel() { }
+
+        public CadastrarDisciplinaViewModel(string nome) : this()
         {
             Nome = nome;
+      
         }
     }
+
     public class VisualizarDisciplinaViewModel
     {
         public List<DetalhesDisciplinaViewModel> Registros { get; set; }
@@ -28,6 +39,37 @@ namespace GeradorDeTestes.WebApp.Models
                 Registros.Add(c.ParaDetalhesVM());
         }
     }
+    public class EditarDisciplinaViewMode : FormularioDisciplinaViewModel
+    {
+        public Guid Id { get; set; }
+
+        public EditarDisciplinaViewMode() { }
+
+        public EditarDisciplinaViewMode(
+            Guid id,
+            string nome
+       
+            ) : this()
+        {
+            Id = id;
+            Nome = nome;
+        }
+    }
+
+    public class ExcluirDisciplinaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+
+        public ExcluirDisciplinaViewModel() { }
+
+        public ExcluirDisciplinaViewModel(Guid id, string nome) : this()
+        {
+            Id = id;
+            Nome = nome;
+        }
+    }
+
     public class DetalhesDisciplinaViewModel
     {
         public Guid Id { get; set; }
@@ -42,8 +84,6 @@ namespace GeradorDeTestes.WebApp.Models
         {
             Id = id;
             Nome = nome;
-
-
         }
 
     }
