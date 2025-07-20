@@ -45,7 +45,7 @@ public class Disciplina : Controller
         var registros = repositorioDisciplina.SelecionarRegistros();
 
         if (registros.Any(x => x.Nome.Equals(cadastrarVM.Nome)))
-            ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
+            ModelState.AddModelError("CadastroUnico", "Já existe uma Disciplina com este nome.");
 
         if (!ModelState.IsValid)
             return View(cadastrarVM);
