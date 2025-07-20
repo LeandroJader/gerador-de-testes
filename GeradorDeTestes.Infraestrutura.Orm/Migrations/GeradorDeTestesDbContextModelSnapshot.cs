@@ -22,63 +22,41 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Correta")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("QuestaoId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Resposta")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestaoId");
-
-                    b.ToTable("Alternativas");
-                });
-
-            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Enunciado")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("Materia")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questoes");
+                    b.ToTable("Disciplina", (string)null);
                 });
 
-            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
                 {
-                    b.HasOne("GeradorDeTestes.Dominio.ModuloQuestao.Questao", "Questao")
-                        .WithMany("Alternativas")
-                        .HasForeignKey("QuestaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Navigation("Questao");
-                });
+                    b.Property<string>("Disciplina")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
-                {
-                    b.Navigation("Alternativas");
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Serie")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materia", (string)null);
                 });
 #pragma warning restore 612, 618
         }

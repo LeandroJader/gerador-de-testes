@@ -1,16 +1,17 @@
 ﻿using GeradorDeTestes.Dominio.Compartilhado;
+using GeradorDeTestes.Dominio.ModuloMateria;
 
 namespace GeradorDeTestes.Dominio.ModuloQuestao;
 
 public class Questao : EntidadeBase<Questao>
 {
-    public string Materia { get; set; } // Trocar para class Materia posteriormente
+    public Materia Materia { get; set; } // Trocar para class Materia posteriormente
     public string Enunciado { get; set; }
     public List<Alternativa> Alternativas { get; set; } = new List<Alternativa>();
 
     public Questao() { }
 
-    public Questao(string materia, string enunciado) : this()
+    public Questao(Materia materia, string enunciado) : this()
     {
         Materia = materia;
         Enunciado = enunciado;

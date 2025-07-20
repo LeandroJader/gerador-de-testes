@@ -1,4 +1,5 @@
-﻿using GeradorDeTestes.Dominio.ModuloQuestao;
+﻿using GeradorDeTestes.Dominio.ModuloMateria;
+using GeradorDeTestes.Dominio.ModuloQuestao;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
 using GeradorDeTestes.WebApp.Extensions;
 using GeradorDeTestes.WebApp.Models;
@@ -11,12 +12,15 @@ public class QuestaoController : Controller
 {
     private readonly GeradorDeTestesDbContext contexto;
     private readonly IRepositorioQuestao repositorioQuestao;
+    private readonly IRepositorioMateria repositorioMateria;
 
     public QuestaoController(
         GeradorDeTestesDbContext contexto,
-        IRepositorioQuestao repositorioQuestao)
+        IRepositorioQuestao repositorioQuestao,
+        IRepositorioMateria repositorioMateria)
     {
         this.contexto = contexto;
+        this.repositorioMateria = repositorioMateria;
         this.repositorioQuestao = repositorioQuestao;
     }
 
@@ -70,7 +74,9 @@ public class QuestaoController : Controller
                 .Select(a => a.ParaEntidade())
                 .ToList();
 
-            var entidade = cadastrarVM.ParaEntidade(alternativas);
+            var materias = repositorioMateria.SelecionarRegistros();
+
+            var entidade = cadastrarVM.ParaEntidade(alternativas, materias);
 
             repositorioQuestao.CadastrarRegistro(entidade);
 
@@ -93,12 +99,15 @@ public class QuestaoController : Controller
     {
         var registro = repositorioQuestao.SelecionarRegistroPorId(id);
 
+        var materias = repositorioMateria.SelecionarRegistros();
+
         if (registro is null)
             return RedirectToAction(nameof(Index));
 
         var editarVM = new EditarQuestaoViewModel(
             registro.Id,
-            registro.Materia,
+            materias,
+            registro.Materia.Id,
             registro.Enunciado,
             registro.Alternativas);
 
@@ -138,7 +147,9 @@ public class QuestaoController : Controller
                 .Select(a => a.ParaEntidade())
                 .ToList();
 
-            var entidade = editarVM.ParaEntidade(alternativas);
+            var materias = repositorioMateria.SelecionarRegistros();
+
+            var entidade = editarVM.ParaEntidade(alternativas, materias);
 
             repositorioQuestao.EditarRegistro(id, entidade);
 
