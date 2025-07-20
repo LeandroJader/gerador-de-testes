@@ -4,6 +4,7 @@ using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
 using GeradorDeTestes.WebApp.Extensions;
 using GeradorDeTestes.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GeradorDeTestes.WebApp.Controllers;
 
@@ -37,7 +38,9 @@ public class QuestaoController : Controller
     [HttpGet("cadastrar")]
     public IActionResult Cadastrar()
     {
-        var cadastrarVM = new CadastrarQuestaoViewModel();
+        var materias = repositorioMateria.SelecionarRegistros();
+
+        var cadastrarVM = new CadastrarQuestaoViewModel(materias);
 
         return View(cadastrarVM);
     }
@@ -203,12 +206,31 @@ public class QuestaoController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-    
+
+    [HttpGet("detalhes/{id:guid}")]
+    public IActionResult Detalhes(Guid id)
+    {
+        var registro = repositorioQuestao.SelecionarRegistroPorId(id);
+        
+        if (registro is null)
+            return RedirectToAction(nameof(Index));
+        
+        var detalhesVM = new DetalhesQuestaoViewModel(
+            id,
+            registro.Materia.Nome,
+            registro.Enunciado,
+            registro.Alternativas);
+        
+        return View(detalhesVM);
+    }
+
     [HttpPost, Route("/questoes/cadastrar/adicionar-alternativa")]
     public IActionResult AdicionarAlternativa(
         CadastrarQuestaoViewModel cadastrarVM, 
         AdicionarAlternativaViewModel adicionarVM)
     {
+        var materias = repositorioMateria.SelecionarRegistros();
+
         var letraEscolhida = (char)('a' + cadastrarVM.Alternativas.Count);
 
         var alternativa = new AlternativaViewModel(
@@ -218,6 +240,13 @@ public class QuestaoController : Controller
 
         cadastrarVM.Alternativas.Add(alternativa);
 
+        cadastrarVM.MateriasDisponiveis = materias
+            .Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            }).ToList();
+
         return View(nameof(Cadastrar), cadastrarVM);
     }
 
@@ -226,6 +255,8 @@ public class QuestaoController : Controller
         CadastrarQuestaoViewModel cadastrarVM, 
         string letra)
     {
+        var materias = repositorioMateria.SelecionarRegistros();
+
         char letraChar = letra[0];
 
         var alternativaParaRemover = cadastrarVM.Alternativas
@@ -237,6 +268,13 @@ public class QuestaoController : Controller
         for (int i = 0; i < cadastrarVM.Alternativas.Count; i++)
             cadastrarVM.Alternativas[i].Letra = (char)('a' + i);
 
+        cadastrarVM.MateriasDisponiveis = materias
+            .Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            }).ToList();
+
         return View(nameof(Cadastrar), cadastrarVM);
     }
 
@@ -245,6 +283,8 @@ public class QuestaoController : Controller
         EditarQuestaoViewModel editarVM,
         AdicionarAlternativaViewModel adicionarVM)
     {
+        var materias = repositorioMateria.SelecionarRegistros();
+
         var letraEscolhida = (char)('a' + editarVM.Alternativas.Count);
 
         var alternativa = new AlternativaViewModel(
@@ -254,6 +294,13 @@ public class QuestaoController : Controller
 
         editarVM.Alternativas.Add(alternativa);
 
+        editarVM.MateriasDisponiveis = materias
+            .Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            }).ToList();
+
         return View(nameof(Editar), editarVM);
     }
 
@@ -262,6 +309,8 @@ public class QuestaoController : Controller
         EditarQuestaoViewModel editarVM,
         string letra)
     {
+        var materias = repositorioMateria.SelecionarRegistros();
+
         char letraChar = letra[0];
 
         var alternativaParaRemover = editarVM.Alternativas
@@ -272,6 +321,13 @@ public class QuestaoController : Controller
 
         for (int i = 0; i < editarVM.Alternativas.Count; i++)
             editarVM.Alternativas[i].Letra = (char)('a' + i);
+
+        editarVM.MateriasDisponiveis = materias
+            .Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            }).ToList();
 
         return View(nameof(Editar), editarVM);
     }

@@ -12,6 +12,7 @@ public class RepositorioQuestaoEmOrm : RepositorioBaseEmOrm<Questao>, IRepositor
     {
         return registros
             .Include(q => q.Alternativas)
+            .Include(q => q.Materia)
             .FirstOrDefault(q => q.Id.Equals(idRegistro));
     }
 
@@ -19,6 +20,7 @@ public class RepositorioQuestaoEmOrm : RepositorioBaseEmOrm<Questao>, IRepositor
     {
         return registros
             .Include(q => q.Alternativas)
+            .Include(q => q.Materia)
             .ToList();
     }
 }

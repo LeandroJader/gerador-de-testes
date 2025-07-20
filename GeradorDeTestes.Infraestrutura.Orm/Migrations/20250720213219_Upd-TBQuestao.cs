@@ -6,22 +6,54 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_TBQuestao : Migration
+    public partial class UpdTBQuestao : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Disciplina",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Nome = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Disciplina", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Materia",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Disciplina = table.Column<string>(type: "text", nullable: false),
+                    Serie = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materia", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questoes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Materia = table.Column<string>(type: "text", nullable: false),
+                    MateriaId = table.Column<Guid>(type: "uuid", nullable: false),
                     Enunciado = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questoes_Materia_MateriaId",
+                        column: x => x.MateriaId,
+                        principalTable: "Materia",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -29,7 +61,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Resposta = table.Column<string>(type: "text", nullable: false),
+                    Resposta = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Correta = table.Column<bool>(type: "boolean", nullable: false),
                     QuestaoId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -48,6 +80,11 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 name: "IX_Alternativas_QuestaoId",
                 table: "Alternativas",
                 column: "QuestaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questoes_MateriaId",
+                table: "Questoes",
+                column: "MateriaId");
         }
 
         /// <inheritdoc />
@@ -57,7 +94,13 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 name: "Alternativas");
 
             migrationBuilder.DropTable(
+                name: "Disciplina");
+
+            migrationBuilder.DropTable(
                 name: "Questoes");
+
+            migrationBuilder.DropTable(
+                name: "Materia");
         }
     }
 }

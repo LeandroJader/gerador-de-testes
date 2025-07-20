@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeTestesDbContext))]
-    [Migration("20250717201925_Add_TBAlternativa")]
-    partial class Add_TBAlternativa
+    [Migration("20250720213219_Upd-TBQuestao")]
+    partial class UpdTBQuestao
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,43 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Disciplina");
+                });
+
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Disciplina")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Serie")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materia");
+                });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>
                 {
@@ -58,11 +95,12 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Materia")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("MateriaId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MateriaId");
 
                     b.ToTable("Questoes");
                 });
@@ -76,6 +114,17 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                         .IsRequired();
 
                     b.Navigation("Questao");
+                });
+
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+                {
+                    b.HasOne("GeradorDeTestes.Dominio.ModuloMateria.Materia", "Materia")
+                        .WithMany()
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Materia");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>

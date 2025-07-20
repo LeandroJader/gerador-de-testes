@@ -24,6 +24,20 @@ public class CadastrarQuestaoViewModel : FormularioQuestaoViewModel
 
     public CadastrarQuestaoViewModel() { }
 
+    public CadastrarQuestaoViewModel(List<Materia> materias) : this()
+    {
+        foreach (var m in materias)
+        {
+            var materiaDisponivel = new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            };
+
+            MateriasDisponiveis.Add(materiaDisponivel);
+        }
+    }
+
     public CadastrarQuestaoViewModel(
         List<Materia> materias,
         string enunciado,
