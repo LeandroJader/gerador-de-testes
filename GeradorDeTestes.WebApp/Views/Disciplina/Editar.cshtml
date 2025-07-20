@@ -1,9 +1,8 @@
-﻿
-@model CadastrarDisciplinaViewModel
+﻿@model EditarDisciplinaViewMode
 
 @{
     Layout = "_Layout";
-    ViewBag.Titulo = "Cadastro de Disciplinas";
+    ViewBag.Titulo = "Edição de Disciplinas";
 }
 
 <hr />
@@ -11,16 +10,14 @@
     <div class="col-md-8">
         <div class="card rounded-4 border-0">
             <div class="card-body p-md-5">
-                <form asp-action="Cadastrar">
-                    <h3>Formulário de Cadastro</h3>
+                <form asp-action="Editar" asp-route-id="@Model.Id">
+                    <h3>Formulário de Edição</h3>
 
-                    <div class="form-group d-grid gap-2 mt-3">
+                    <div class="form-group d-grid gap-2 mt-5">
                         <label asp-for="Nome" class="control-label fs-5">Nome:</label>
-                        <input asp-for="Nome" class="form-control" value="@Model.Nome" />
+                        <input asp-for="Nome" class="form-control" />
                         <span asp-validation-for="Nome" class="text-danger"></span>
                     </div>
-           
-
                     <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
                         <a href="/disciplinas">Voltar para a listagem</a>
                         <button type="submit" class="btn btn-primary rounded-3 px-5">Confirmar</button>
@@ -30,7 +27,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

@@ -39,6 +39,37 @@ namespace GeradorDeTestes.WebApp.Models
                 Registros.Add(c.ParaDetalhesVM());
         }
     }
+    public class EditarDisciplinaViewMode : FormularioDisciplinaViewModel
+    {
+        public Guid Id { get; set; }
+
+        public EditarDisciplinaViewMode() { }
+
+        public EditarDisciplinaViewMode(
+            Guid id,
+            string nome
+       
+            ) : this()
+        {
+            Id = id;
+            Nome = nome;
+        }
+    }
+
+    public class ExcluirDisciplinaViewModel
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+
+        public ExcluirDisciplinaViewModel() { }
+
+        public ExcluirDisciplinaViewModel(Guid id, string nome) : this()
+        {
+            Id = id;
+            Nome = nome;
+        }
+    }
+
     public class DetalhesDisciplinaViewModel
     {
         public Guid Id { get; set; }
@@ -53,8 +84,6 @@ namespace GeradorDeTestes.WebApp.Models
         {
             Id = id;
             Nome = nome;
-
-
         }
 
     }

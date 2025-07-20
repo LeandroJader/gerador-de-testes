@@ -71,7 +71,95 @@ public class Disciplina : Controller
 
         return RedirectToAction(nameof(Index));
     }
+    [HttpGet("editar/{id:guid}")]
+    public IActionResult Editar(Guid id)
+    {
+        var registroSelecionado = repositorioDisciplina.SelecionarRegistroPorId(id);
+
+        if (registroSelecionado == null)
+            return NotFound();
+
+        var editarVM = new EditarDisciplinaViewMode(
+            registroSelecionado.Id,
+            registroSelecionado.Nome
+          
+        );
+
+        return View(editarVM);
+    }
+
+    [HttpPost("editar/{id:guid}")]
+    public IActionResult Editar(Guid id, EditarDisciplinaViewMode editarVM)
+    {
+        var registros = repositorioDisciplina
+            .SelecionarRegistros()
+            .Where(r => r.Id != id);
+
+        if (registros.Any(x => x.Nome.Equals(editarVM.Nome)))
+            ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
+
+        if (!ModelState.IsValid)
+            return View(editarVM);
+
+        var entidade = editarVM.ParaEntidade();
+
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioDisciplina.EditarRegistro(id, entidade);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet("excluir/{id:guid}")]
+    public ActionResult Excluir(Guid id)
+    {
+        var registroSelecionado = repositorioDisciplina.SelecionarRegistroPorId(id);
+
+        if (registroSelecionado == null)
+            return RedirectToAction(nameof(Index));
+
+        var excluirVM = new ExcluirDisciplinaViewModel(registroSelecionado.Id, registroSelecionado.Nome);
+
+        return View(excluirVM);
+    }
+
+    [HttpPost("excluir/{id:guid}")]
+    public ActionResult ExcluirConfirmado(Guid id)
+    {
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioDisciplina.ExcluirRegistro(id);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }
+
 
  
 
