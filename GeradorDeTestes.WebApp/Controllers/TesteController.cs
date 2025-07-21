@@ -63,39 +63,17 @@ public class TesteController : Controller
         if (registros.Any(x => x.Titulo.Equals(gerarVM.Titulo)))
             ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este título.");
 
-        if (!ModelState.IsValid)
-        {
-            gerarVM.Disciplinas = repositorioDisciplina.SelecionarRegistros();
-            gerarVM.Materias = repositorioMateria.SelecionarRegistros();
-            return View(gerarVM);
-        }
-
-        // 🔽 Buscar entidades reais do banco para garantir rastreamento
-        var disciplina = contexto.Disciplinas.SingleOrDefault(d => d.Id == gerarVM.DisciplinaId);
-        var materia = contexto.Materias.SingleOrDefault(m => m.Id == gerarVM.MateriaId);
-
-        if (disciplina is null)
-            ModelState.AddModelError("DisciplinaId", "Disciplina inválida.");
-
-        if (materia is null)
-            ModelState.AddModelError("MateriaId", "Matéria inválida.");
+        var disciplinas = repositorioDisciplina.SelecionarRegistros();
+        var materias = repositorioMateria.SelecionarRegistros();
 
         if (!ModelState.IsValid)
         {
-            gerarVM.Disciplinas = repositorioDisciplina.SelecionarRegistros();
-            gerarVM.Materias = repositorioMateria.SelecionarRegistros();
+            gerarVM.Disciplinas = disciplinas;
+            gerarVM.Materias = materias;
             return View(gerarVM);
         }
 
-        // 🔽 Agora sim pode criar o Teste com entidades rastreadas
-        var entidade = new Teste(
-            gerarVM.Titulo,
-            disciplina!,
-            materia!,
-            gerarVM.Serie,
-            gerarVM.QuantidadeQuestoes,
-            gerarVM.TipoTeste
-        );
+        var entidade = gerarVM.ParaEntidade(disciplinas, materias);
 
         var transacao = contexto.Database.BeginTransaction();
 
@@ -142,4 +120,114 @@ public class TesteController : Controller
         return View("Gerar", gerarVM);
     }
 
+    [HttpGet("duplicar/{id:guid}")]
+    public IActionResult Duplicar(Guid id)
+    {
+        Teste? registro = repositorioTeste.SelecionarRegistroPorId(id);
+
+        var disciplinas = repositorioDisciplina.SelecionarRegistros();
+        var materias = repositorioMateria.SelecionarRegistros();
+
+        var duplicarVM = new DuplicarTesteViewModel(registro);
+
+        duplicarVM.Disciplinas = disciplinas;
+        duplicarVM.Materias = materias;
+
+        return View(duplicarVM);
+    }
+
+    [HttpPost("duplicar/preview")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Preview(DuplicarTesteViewModel duplicarVM)
+    {
+        var questoes = repositorioQuestao.SelecionarRegistros()
+            .Where(q =>
+                q.Materia.Id == duplicarVM.MateriaId &&
+                q.Materia.Serie == duplicarVM.Serie)
+            .ToList();
+
+        if (duplicarVM.QuantidadeQuestoes > questoes.Count)
+        {
+            ModelState.AddModelError(nameof(duplicarVM.QuantidadeQuestoes), "Quantidade maior do que o número de questões disponíveis.");
+        }
+
+        duplicarVM.Disciplinas = repositorioDisciplina.SelecionarRegistros();
+        duplicarVM.Materias = repositorioMateria.SelecionarRegistros();
+
+        duplicarVM.QuestoesSorteadas = questoes.OrderBy(_ => Guid.NewGuid())
+                                            .Take(duplicarVM.QuantidadeQuestoes)
+                                            .ToList();
+
+        return View("Duplicar", duplicarVM);
+    }
+
+    [HttpPost("duplicar")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Duplicar(DuplicarTesteViewModel duplicarVM)
+    {
+        var registros = repositorioTeste.SelecionarRegistros();
+
+        if (registros.Any(x => x.Titulo.Equals(duplicarVM.Titulo)))
+            ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este título.");
+
+        var disciplinas = repositorioDisciplina.SelecionarRegistros();
+        var materias = repositorioMateria.SelecionarRegistros();
+
+        if (!ModelState.IsValid)
+        {
+            duplicarVM.Disciplinas = disciplinas;
+            duplicarVM.Materias = materias;
+            return View(duplicarVM);
+        }
+
+        var entidade = duplicarVM.ParaEntidade(disciplinas, materias);
+
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioTeste.CadastrarRegistro(entidade);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+
+    [HttpGet("detalhes/{id:guid}")]
+    public IActionResult Detalhes(Guid id)
+    {
+        var registro = repositorioTeste.SelecionarRegistroPorId(id);
+
+        var questoes = repositorioQuestao.SelecionarRegistros()
+            .Where(q =>
+                q.Materia.Id == registro.Materia.Id &&
+                q.Materia.Serie == registro.Materia.Serie)
+            .ToList();
+
+        if (registro is null)
+            return RedirectToAction(nameof(Index));
+
+        var detalhesVM = new DetalhesTesteViewModel(
+            registro.Id,
+            registro.Titulo,
+            registro.Disciplina.Nome,
+            registro.Materia.Nome,
+            registro.Serie,
+            registro.TipoTeste,
+            registro.QuantidadeQuestoes
+        );
+
+        detalhesVM.QuestoesSorteadas = questoes;
+
+        return View(detalhesVM);
+    }
 }

@@ -128,6 +128,7 @@ public class DetalhesTesteViewModel
     public Serie Serie { get; set; }
     public TipoTeste TipoTeste { get; set; }
     public int QuantidadeQuestoes { get; set; }
+    public List<Questao> QuestoesSorteadas { get; set; }
 
     public DetalhesTesteViewModel(
         Guid id,

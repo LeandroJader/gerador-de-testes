@@ -1,4 +1,5 @@
-﻿@model VisualizarTestesViewModel
+﻿@using GeradorDeTestes.WebApp.Extensions
+@model VisualizarTestesViewModel
 
 @{
     Layout = "_Layout";
@@ -30,7 +31,7 @@
                             <strong>Disciplina:</strong> @item.Disciplina
                         </p>
                         <p class="card-text mb-1">
-                            <strong>Série:</strong> @item.Serie
+                            <strong>Série:</strong> @item.Serie.GetDisplayName()
                         </p>
                         <p class="card-text">
                             <strong>Tipo de Teste:</strong> @item.TipoTeste
@@ -40,8 +41,8 @@
                         <a href="/testes/detalhes/@item.Id" class="btn btn-secondary">
                             <i class="bi bi-search"></i>
                         </a>
-                        <a href="/testes/editar/@item.Id" class="btn btn-primary">
-                            <i class="bi bi-pencil-square"></i>
+                        <a href="/testes/duplicar/@item.Id" class="btn btn-primary">
+                            <i class="bi bi-files"></i>
                         </a>
                         <a href="/testes/excluir/@item.Id" class="btn btn-danger">
                             <i class="bi bi-trash"></i>

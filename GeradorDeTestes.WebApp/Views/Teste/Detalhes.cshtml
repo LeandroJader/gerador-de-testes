@@ -37,9 +37,27 @@
                     <input class="form-control" value="@Model.Serie" readonly disabled />
                 </div>
 
-                <div class="form-group d-grid gap-2 mt-3">
-                    <label class="control-label fs-5">Quantidade de Questões:</label>
-                    <input class="form-control" value="@Model.QuantidadeQuestoes" readonly disabled />
+                <div class="mt-5">
+                    <h5>Questões Sorteadas:</h5>
+                    <ul class="list-group">
+                        @foreach (var questao in Model.QuestoesSorteadas)
+                        {
+                            <li class="list-group-item">
+                                <strong>@questao.Enunciado</strong>
+                                <ul class="mt-2">
+                                    @{
+                                        var letras = new[] { "a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)" };
+                                        int i = 0;
+                                    }
+                                    @foreach (var alternativa in questao.Alternativas)
+                                    {
+                                        <li>@letras[i] @alternativa.Resposta</li>
+                                        i++;
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
                 </div>
 
                 <div class="form-group d-flex align-items-center justify-content-between gap-3 mt-5">

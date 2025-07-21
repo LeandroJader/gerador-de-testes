@@ -1,6 +1,7 @@
 ﻿using GeradorDeTestes.Dominio.Compartilhado;
 using GeradorDeTestes.Dominio.ModuloDisciplina;
 using GeradorDeTestes.Dominio.ModuloMateria;
+using GeradorDeTestes.Dominio.ModuloQuestao;
 
 namespace GeradorDeTestes.Dominio.ModuloTeste;
 
