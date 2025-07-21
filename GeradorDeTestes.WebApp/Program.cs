@@ -8,6 +8,8 @@ using GeradorDeTestes.Infraestrutura.Orm.ModuloMateria;
 using GeradorDeTestes.WebApp.ActionFilters;
 using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
+using GeradorDeTestes.Dominio.ModuloTeste;
+using GeradorDeTestes.Infraestrutura.Orm.ModuloTeste;
 
 namespace GeradorDeTestes.WebApp
 {
@@ -26,6 +28,7 @@ namespace GeradorDeTestes.WebApp
 
             builder.Services.AddScoped<IRepositorioMateria, RepositorioMateriaEmOrm>();
             builder.Services.AddScoped<IRepositorioDisciplina, RepositorioDisciplinaEmOrm>();
+            builder.Services.AddScoped<IRepositorioTeste, RepositorioTesteEmOrm>();
 
             // builder.Services.AddScoped<IRepositorioDeVoces, RepositorioDeVoces>();
             

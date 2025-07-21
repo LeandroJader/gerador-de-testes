@@ -9,13 +9,13 @@ namespace GeradorDeTestes.WebApp.Controllers;
 
 
     [Route("disciplinas")]
-public class Disciplina : Controller
+public class DisciplinaController : Controller
 {
     private readonly GeradorDeTestesDbContext contexto;
     private readonly IRepositorioDisciplina repositorioDisciplina;
 
 
-    public Disciplina(GeradorDeTestesDbContext contexto, IRepositorioDisciplina repositorioDisciplina)
+    public DisciplinaController(GeradorDeTestesDbContext contexto, IRepositorioDisciplina repositorioDisciplina)
     {
         this.contexto = contexto;
         this.repositorioDisciplina = repositorioDisciplina;

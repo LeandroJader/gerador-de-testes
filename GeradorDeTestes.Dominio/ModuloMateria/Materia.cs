@@ -1,18 +1,19 @@
 ﻿using GeradorDeTestes.Dominio.Compartilhado;
+using GeradorDeTestes.Dominio.ModuloDisciplina;
 
 namespace GeradorDeTestes.Dominio.ModuloMateria;
 
 public class Materia : EntidadeBase<Materia>
 {
     public string Nome { get; set; }
-    public string Disciplina { get; set; }
+    public Disciplina Disciplina { get; set; }
     public Serie Serie { get; set; }
 
     public Materia() { }
 
     public Materia(
         string nome,
-        string disciplina,
+        Disciplina disciplina,
         Serie serie
     )
     {
@@ -24,7 +25,7 @@ public class Materia : EntidadeBase<Materia>
     public Materia(
         Guid id,
         string nome,
-        string disciplina,
+        Disciplina disciplina,
         Serie serie
     ) : this(nome, disciplina, serie)
     {

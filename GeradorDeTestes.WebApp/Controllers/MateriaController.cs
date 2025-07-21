@@ -1,4 +1,5 @@
-﻿using GeradorDeTestes.Dominio.ModuloMateria;
+﻿using GeradorDeTestes.Dominio.ModuloDisciplina;
+using GeradorDeTestes.Dominio.ModuloMateria;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
 using GeradorDeTestes.WebApp.Extensions;
 using GeradorDeTestes.WebApp.Models;
@@ -11,11 +12,13 @@ public class MateriaController : Controller
 {
     private readonly GeradorDeTestesDbContext contexto;
     private readonly IRepositorioMateria repositorioMateria;
+    private readonly IRepositorioDisciplina repositorioDisciplina;
 
-    public MateriaController(GeradorDeTestesDbContext contexto, IRepositorioMateria repositorioMateria)
+    public MateriaController(GeradorDeTestesDbContext contexto, IRepositorioMateria repositorioMateria, IRepositorioDisciplina repositorioDisciplina)
     {
         this.contexto = contexto;
         this.repositorioMateria = repositorioMateria;
+        this.repositorioDisciplina = repositorioDisciplina;
     }
 
     public IActionResult Index()
@@ -30,14 +33,17 @@ public class MateriaController : Controller
     [HttpGet("cadastrar")]
     public IActionResult Cadastrar()
     {
-        var cadastrarVM = new CadastrarMateriaViewModel();
+        var cadastrarVM = new CadastrarMateriaViewModel
+        {
+            Disciplinas = repositorioDisciplina.SelecionarRegistros()
+        };
 
         return View(cadastrarVM);
     }
 
     [HttpPost("cadastrar")]
     [ValidateAntiForgeryToken]
-    public ActionResult Cadastrar(CadastrarMateriaViewModel cadastrarVM)
+    public IActionResult Cadastrar(CadastrarMateriaViewModel cadastrarVM)
     {
         var registros = repositorioMateria.SelecionarRegistros();
 
@@ -45,7 +51,17 @@ public class MateriaController : Controller
             ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
 
         if (!ModelState.IsValid)
+        {
+            cadastrarVM.Disciplinas = repositorioDisciplina.SelecionarRegistros();
             return View(cadastrarVM);
+        }
+
+        Disciplina? disciplinaSelecionada = null;
+
+        if (cadastrarVM.DisciplinaId != null)
+            disciplinaSelecionada = repositorioDisciplina.SelecionarRegistroPorId(cadastrarVM.DisciplinaId.Value);
+
+        cadastrarVM.Disciplina = disciplinaSelecionada;
 
         var entidade = cadastrarVM.ParaEntidade();
 
@@ -98,9 +114,15 @@ public class MateriaController : Controller
             ModelState.AddModelError("CadastroUnico", "Já existe um registro registrado com este nome.");
 
         if (!ModelState.IsValid)
+        {
+            editarVM.Disciplinas = repositorioDisciplina.SelecionarRegistros();
             return View(editarVM);
+        }
 
         var entidade = editarVM.ParaEntidade();
+
+        if (editarVM.DisciplinaId != null)
+            entidade.Disciplina = repositorioDisciplina.SelecionarRegistroPorId(id);
 
         var transacao = contexto.Database.BeginTransaction();
 

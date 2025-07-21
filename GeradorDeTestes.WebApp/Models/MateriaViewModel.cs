@@ -1,5 +1,7 @@
-﻿using GeradorDeTestes.Dominio.ModuloMateria;
+﻿using GeradorDeTestes.Dominio.ModuloDisciplina;
+using GeradorDeTestes.Dominio.ModuloMateria;
 using GeradorDeTestes.WebApp.Extensions;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace GeradorDeTestes.WebApp.Models;
@@ -11,24 +13,32 @@ public class FormularioMateriaViewModel
     [MaxLength(100, ErrorMessage = "O campo \"Nome\" precisa conter no máximo 100 caracteres.")]
     public string Nome { get; set; }
 
-    [Required(ErrorMessage = "O campo \"Disciplina\" é obrigatório.")]
-    [MinLength(3, ErrorMessage = "O campo \"Disciplina\" precisa conter ao menos 3 caracteres.")]
-    [MaxLength(100, ErrorMessage = "O campo \"Disciplina\" precisa conter no máximo 100 caracteres.")]
-    public string Disciplina { get; set; }
-
     [Required(ErrorMessage = "O campo \"Série\" é obrigatório.")]
     public Serie Serie { get; set; }
+
+    public Guid? DisciplinaId { get; set; }
+
+    public Disciplina? Disciplina { get; set; }
+
+    [ValidateNever]
+    public List<Disciplina> Disciplinas { get; set; }
 }
 
 public class CadastrarMateriaViewModel : FormularioMateriaViewModel
 {
     public CadastrarMateriaViewModel() { }
 
-    public CadastrarMateriaViewModel(string nome, string disciplina, Serie serie) : this()
+    public CadastrarMateriaViewModel(
+        string nome, 
+        Serie serie,
+        Guid disciplinaId,
+        List<Disciplina> disciplinas
+    ) : this()
     {
         Nome = nome;
-        Disciplina = disciplina;
         Serie = serie;
+        DisciplinaId = disciplinaId;
+        Disciplinas = disciplinas;
     }
 }
 
@@ -41,7 +51,7 @@ public class EditarMateriaViewModel : FormularioMateriaViewModel
     public EditarMateriaViewModel(
         Guid id,
         string nome,
-        string disciplina,
+        Disciplina disciplina,
         Serie serie
         ) : this()
     {
@@ -93,13 +103,13 @@ public class DetalhesMateriaViewModel
 {
     public Guid Id { get; set; }
     public string Nome { get; set; }
-    public string Disciplina { get; set; }
+    public Disciplina Disciplina { get; set; }
     public Serie Serie { get; set; }
 
     public DetalhesMateriaViewModel(
         Guid id,
         string nome,
-        string disciplina,
+        Disciplina disciplina,
         Serie serie
     )
     {
