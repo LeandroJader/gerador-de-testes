@@ -5,6 +5,7 @@ using GeradorDeTestes.Dominio.ModuloTeste;
 using GeradorDeTestes.Infraestrutura.Orm.Compartilhado;
 using GeradorDeTestes.WebApp.Extensions;
 using GeradorDeTestes.WebApp.Models;
+using GeradorDeTestes.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeradorDeTestes.WebApp.Controllers;
@@ -201,6 +202,43 @@ public class TesteController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpGet("excluir/{id:guid}")]
+    public IActionResult Excluir(Guid id)
+    {
+        var registro = repositorioTeste.SelecionarRegistroPorId(id);
+
+        if (registro is null)
+            return RedirectToAction(nameof(Index));
+
+        var excluirVM = new ExcluirTesteViewModel(registro.Id, registro.Titulo);
+
+        return View(excluirVM);
+    }
+
+    [HttpPost("excluir/{id:guid}")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Excluir(Guid id, ExcluirTesteViewModel excluirVM)
+    {
+        var transacao = contexto.Database.BeginTransaction();
+
+        try
+        {
+            repositorioTeste.ExcluirRegistro(id);
+
+            contexto.SaveChanges();
+
+            transacao.Commit();
+        }
+        catch (Exception)
+        {
+            transacao.Rollback();
+
+            throw;
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
 
     [HttpGet("detalhes/{id:guid}")]
     public IActionResult Detalhes(Guid id)
@@ -230,4 +268,67 @@ public class TesteController : Controller
 
         return View(detalhesVM);
     }
+
+    [HttpGet("gerar-pdf/{id:guid}")]
+    public IActionResult GerarPdf(Guid id)
+    {
+        var teste = repositorioTeste.SelecionarRegistroPorId(id);
+        if (teste == null)
+            return NotFound();
+
+        var questoes = repositorioQuestao.SelecionarRegistros()
+            .Where(q =>
+                q.Materia.Id == teste.Materia.Id &&
+                q.Materia.Serie == teste.Serie)
+            .ToList();
+
+        var detalhesVM = new DetalhesTesteViewModel(
+            teste.Id,
+            teste.Titulo,
+            teste.Disciplina.Nome,
+            teste.Materia.Nome,
+            teste.Serie,
+            teste.TipoTeste,
+            teste.QuantidadeQuestoes
+        )
+        {
+            QuestoesSorteadas = questoes
+        };
+
+        PdfGenerator.GerarPdfSemGabarito(detalhesVM);
+
+        return RedirectToAction("Detalhes", new { id });
+    }
+
+    [HttpGet("gerar-pdf-com-gabarito/{id:guid}")]
+    public IActionResult GerarPdfComGabarito(Guid id)
+    {
+        var teste = repositorioTeste.SelecionarRegistroPorId(id);
+        if (teste == null)
+            return NotFound();
+
+        var questoes = repositorioQuestao.SelecionarRegistros()
+            .Where(q =>
+                q.Materia.Id == teste.Materia.Id &&
+                q.Materia.Serie == teste.Serie)
+            .ToList();
+
+        var detalhesVM = new DetalhesTesteViewModel(
+            teste.Id,
+            teste.Titulo,
+            teste.Disciplina.Nome,
+            teste.Materia.Nome,
+            teste.Serie,
+            teste.TipoTeste,
+            teste.QuantidadeQuestoes
+        )
+        {
+            QuestoesSorteadas = questoes
+        };
+
+        PdfGenerator.GerarPdfComGabarito(detalhesVM);
+
+        return RedirectToAction("Detalhes", new { id });
+    }
+
 }

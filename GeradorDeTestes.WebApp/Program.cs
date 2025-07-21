@@ -10,6 +10,8 @@ using GeradorDeTestes.WebApp.DependencyInjection;
 using GeradorDeTestes.WebApp.Orm;
 using GeradorDeTestes.Dominio.ModuloTeste;
 using GeradorDeTestes.Infraestrutura.Orm.ModuloTeste;
+using GeradorDeTestes.WebApp.Services;
+using QuestPDF.Infrastructure;
 
 namespace GeradorDeTestes.WebApp
 {
@@ -19,6 +21,7 @@ namespace GeradorDeTestes.WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            QuestPDF.Settings.License = LicenseType.Community;
   
             builder.Services.AddControllersWithViews(options =>
             {
