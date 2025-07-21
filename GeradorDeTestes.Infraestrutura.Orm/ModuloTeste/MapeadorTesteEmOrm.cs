@@ -28,10 +28,10 @@ public class MapeadorTesteEmOrm : IEntityTypeConfiguration<Teste>
             .IsRequired();
 
         builder.HasOne(t => t.Disciplina)
-            .WithMany()
+            .WithMany(x => x.Testes)
             .IsRequired();
 
         builder.HasOne(t => t.Materia)
-            .WithMany();
+            .WithMany(x => x.Testes);
     }
 }

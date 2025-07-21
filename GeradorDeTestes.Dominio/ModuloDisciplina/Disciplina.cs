@@ -1,5 +1,6 @@
 ﻿using GeradorDeTestes.Dominio.Compartilhado;
 using GeradorDeTestes.Dominio.ModuloMateria;
+using GeradorDeTestes.Dominio.ModuloTeste;
 
 namespace GeradorDeTestes.Dominio.ModuloDisciplina
 {
@@ -7,6 +8,7 @@ namespace GeradorDeTestes.Dominio.ModuloDisciplina
     {
         public string Nome { get; set;}
         public List<Materia> Materias { get; set; }
+        public List<Teste> Testes { get; set; }
 
         public Disciplina(string nome) : this ()
         {
@@ -21,6 +23,7 @@ namespace GeradorDeTestes.Dominio.ModuloDisciplina
         {
             Nome = registroEditado.Nome;
             Materias = registroEditado.Materias;
+            Testes = registroEditado.Testes;
         }
     }
 }

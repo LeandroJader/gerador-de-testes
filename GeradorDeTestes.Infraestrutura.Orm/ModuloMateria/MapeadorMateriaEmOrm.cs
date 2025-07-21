@@ -22,5 +22,8 @@ public class MapeadorMateriaEmOrm : IEntityTypeConfiguration<Materia>
 
         builder.HasMany(x => x.Questoes)
             .WithOne(x => x.Materia);
+
+        builder.HasMany(x => x.Testes)
+            .WithOne(x => x.Materia);
     }
 }

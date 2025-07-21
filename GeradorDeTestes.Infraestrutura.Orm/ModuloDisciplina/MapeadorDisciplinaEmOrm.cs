@@ -15,8 +15,11 @@ namespace GeradorDeTestes.Infraestrutura.Orm.ModuloDisciplina
                 .IsRequired();
 
             builder.HasMany(d => d.Materias)
-                .WithOne(m => m.Disciplina);
-                .IsRequired();                         
+                .WithOne(m => m.Disciplina)
+                .IsRequired();    
+            
+            builder.HasMany(d => d.Testes)
+                .WithOne(t => t.Disciplina);
         }
     }
 }

@@ -1,0 +1,82 @@
+﻿@using GeradorDeTestes.Dominio.ModuloMateria
+@using GeradorDeTestes.Dominio.ModuloTeste
+@model DuplicarTesteViewModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Duplicar Teste";
+}
+
+<hr />
+<div class="row justify-content-center my-5">
+    <div class="col-md-8">
+        <div class="card rounded-4 border-0">
+            <div class="card-body p-md-5">
+                <form asp-action="Duplicar">
+                    <h3>Formulário de Duplicação</h3>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="Titulo" class="control-label fs-5">Título:</label>
+                        <input asp-for="Titulo" class="form-control" value="@Model.Titulo" />
+                        <span asp-validation-for="Titulo" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="DisciplinaId" class="control-label fs-5">Disciplina:</label>
+                        <select asp-for="DisciplinaId" class="form-control">
+                            <option value="">Selecione uma disciplina</option>
+                            @foreach (var d in Model.Disciplinas)
+                            {
+                                <option value="@d.Id" selected="@(Model.DisciplinaId == d.Id)">
+                                    @d.Nome
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="DisciplinaId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="MateriaId" class="control-label fs-5">Matéria:</label>
+                        <select asp-for="MateriaId" class="form-control">
+                            <option value="">Selecione uma matéria</option>
+                            @foreach (var m in Model.Materias)
+                            {
+                                <option value="@m.Id" selected="@(Model.MateriaId == m.Id)">
+                                    @m.Nome
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="MateriaId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="Serie" class="control-label fs-5">Série:</label>
+                        <select asp-for="Serie" asp-items="@Html.GetEnumSelectList<Serie>()" class="form-select"></select>
+                        <span asp-validation-for="Serie" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="TipoTeste" class="control-label fs-5">Tipo de Teste:</label>
+                        <select asp-for="TipoTeste" asp-items="@Html.GetEnumSelectList<TipoTeste>()" class="form-select"></select>
+                        <span asp-validation-for="TipoTeste" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-grid gap-2 mt-3">
+                        <label asp-for="QuantidadeQuestoes" class="control-label fs-5">Quantidade de Questões:</label>
+                        <input asp-for="QuantidadeQuestoes" class="form-control" />
+                        <span asp-validation-for="QuantidadeQuestoes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center justify-content-end gap-3 mt-5">
+                        <a href="/testes">Voltar para a listagem</a>
+                        <button type="submit" class="btn btn-primary rounded-3 px-5">Confirmar Duplicação</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

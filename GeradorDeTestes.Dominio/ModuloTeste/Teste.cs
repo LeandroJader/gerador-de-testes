@@ -13,10 +13,32 @@ public class Teste : EntidadeBase<Teste>
     public int QuantidadeQuestoes { get; set; }
     public TipoTeste TipoTeste {  get; set; }
     
+    public Teste () { }
+
+    public Teste (
+        string titulo,
+        Disciplina disciplina,
+        Materia materia,
+        Serie serie,
+        int quantidadeQuestoes,
+        TipoTeste tipoTeste
+    )
+    {
+        Titulo = titulo;
+        Disciplina = disciplina;
+        Materia = materia;
+        Serie = serie;
+        QuantidadeQuestoes = quantidadeQuestoes;
+        TipoTeste = tipoTeste;
+    }
 
     public override void AtualizarRegistro(Teste registroEditado)
     {
         Titulo = registroEditado.Titulo;
         Disciplina = registroEditado.Disciplina;
+        Materia = registroEditado.Materia;
+        Serie = registroEditado.Serie;
+        QuantidadeQuestoes = registroEditado.QuantidadeQuestoes;
+        TipoTeste = registroEditado.TipoTeste;
     }
 }
