@@ -18,8 +18,6 @@ public class FormularioMateriaViewModel
 
     public Guid? DisciplinaId { get; set; }
 
-    public Disciplina? Disciplina { get; set; }
-
     [ValidateNever]
     public List<Disciplina> Disciplinas { get; set; }
 }
@@ -51,24 +49,16 @@ public class EditarMateriaViewModel : FormularioMateriaViewModel
     public EditarMateriaViewModel(
         Guid id,
         string nome,
-        Disciplina disciplina,
-        Serie serie
+        Serie serie,
+        Guid disciplinaId,
+        List<Disciplina> disciplinas
         ) : this()
     {
         Id = id;
         Nome = nome;
-        Disciplina = disciplina;
         Serie = serie;
-    }
-
-    public Materia ParaEntidade()
-    {
-        return new Materia(
-            Id,
-            Nome,
-            Disciplina,
-            Serie
-        );
+        DisciplinaId = disciplinaId;
+        Disciplinas = disciplinas;
     }
 }
 
@@ -103,13 +93,13 @@ public class DetalhesMateriaViewModel
 {
     public Guid Id { get; set; }
     public string Nome { get; set; }
-    public Disciplina Disciplina { get; set; }
+    public string Disciplina { get; set; }
     public Serie Serie { get; set; }
 
     public DetalhesMateriaViewModel(
         Guid id,
         string nome,
-        Disciplina disciplina,
+        string disciplina,
         Serie serie
     )
     {

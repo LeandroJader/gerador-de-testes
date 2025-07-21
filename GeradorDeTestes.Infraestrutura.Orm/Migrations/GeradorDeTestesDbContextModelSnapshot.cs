@@ -162,6 +162,17 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                     b.Navigation("Questao");
                 });
 
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+                {
+                    b.HasOne("GeradorDeTestes.Dominio.ModuloMateria.Materia", "Materia")
+                        .WithMany("Questoes")
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Materia");
+                });
+
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloTeste.Teste", b =>
                 {
                     b.HasOne("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", "Disciplina")
@@ -184,15 +195,9 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                     b.Navigation("Materias");
                 });
 
-            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
                 {
-                    b.HasOne("GeradorDeTestes.Dominio.ModuloMateria.Materia", "Materia")
-                        .WithMany()
-                        .HasForeignKey("MateriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Materia");
+                    b.Navigation("Questoes");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>

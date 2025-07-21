@@ -12,6 +12,7 @@ public class Teste : EntidadeBase<Teste>
     public Serie Serie { get; set; }
     public int QuantidadeQuestoes { get; set; }
     public TipoTeste TipoTeste {  get; set; }
+    
 
     public override void AtualizarRegistro(Teste registroEditado)
     {

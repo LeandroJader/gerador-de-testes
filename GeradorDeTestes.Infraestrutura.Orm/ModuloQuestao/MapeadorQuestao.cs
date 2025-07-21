@@ -12,7 +12,8 @@ public class MapeadorQuestao : IEntityTypeConfiguration<Questao>
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.HasOne(x => x.Materia);
+        builder.HasOne(x => x.Materia)
+            .WithMany(x => x.Questoes);
 
         builder.Property(x => x.Enunciado)
             .HasMaxLength(300)

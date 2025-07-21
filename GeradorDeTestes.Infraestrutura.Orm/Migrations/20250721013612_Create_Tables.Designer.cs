@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeTestesDbContext))]
-    [Migration("20250721000442_Add_TBTeste")]
-    partial class Add_TBTeste
+    [Migration("20250721013612_Create_Tables")]
+    partial class Create_Tables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,11 +96,12 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Materia")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("MateriaId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MateriaId");
 
                     b.ToTable("Questoes");
                 });
@@ -164,6 +165,17 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                     b.Navigation("Questao");
                 });
 
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+                {
+                    b.HasOne("GeradorDeTestes.Dominio.ModuloMateria.Materia", "Materia")
+                        .WithMany("Questoes")
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Materia");
+                });
+
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloTeste.Teste", b =>
                 {
                     b.HasOne("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", "Disciplina")
@@ -184,6 +196,11 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", b =>
                 {
                     b.Navigation("Materias");
+                });
+
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
+                {
+                    b.Navigation("Questoes");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>

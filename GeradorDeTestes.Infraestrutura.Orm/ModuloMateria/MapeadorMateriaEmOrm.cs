@@ -19,5 +19,8 @@ public class MapeadorMateriaEmOrm : IEntityTypeConfiguration<Materia>
 
         builder.HasOne(m => m.Disciplina)
             .WithMany(d => d.Materias);
+
+        builder.HasMany(x => x.Questoes)
+            .WithOne(x => x.Materia);
     }
 }
