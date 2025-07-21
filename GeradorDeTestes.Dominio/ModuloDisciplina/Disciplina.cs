@@ -11,6 +11,7 @@ namespace GeradorDeTestes.Dominio.ModuloDisciplina
         public Disciplina(string nome) : this ()
         {
             Nome = nome;
+            //Materia = materia;
         }
         public Disciplina()
         {

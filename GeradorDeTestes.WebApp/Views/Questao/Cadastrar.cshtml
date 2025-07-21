@@ -28,14 +28,13 @@
                         <input asp-for="Enunciado" class="form-control" />
                         <span asp-validation-for="Enunciado" class="text-danger"></span>
                     </div>
-
                     <div class="form-group d-grid gap-2 mt-3">
                         <label asp-for="MateriaId" class="control-label fs-5">Matéria:</label>
-                        <select asp-for="MateriaId" asp-items="@Model.MateriasDisponiveis" class="form-control"></select>
+                        <input asp-for="MateriaId" class="form-control"/>
                         <span asp-validation-for="MateriaId" class="text-danger"></span>
                     </div>
 
-                    <h3 class="my-3">Alternativas</h3>
+                    <h4 class="my-3">Alternativas</h4>
                     
                     @if (Model.Alternativas.Count < 4)
                     {
@@ -58,8 +57,6 @@
                             </button>
                         </div>
                     }
-
-
 
                     @for (var i = 0; i < Model.Alternativas.Count; i++)
                     {
