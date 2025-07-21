@@ -33,7 +33,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Disciplina");
+                    b.ToTable("Disciplinas");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
@@ -56,7 +56,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materia");
+                    b.ToTable("Materias");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>

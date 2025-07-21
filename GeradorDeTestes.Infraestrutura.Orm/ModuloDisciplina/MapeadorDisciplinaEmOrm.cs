@@ -19,11 +19,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.ModuloDisciplina
                 .IsRequired();
             
             builder.Property(x => x.Nome)
-                .IsRequired();
-
-            //builder.HasOne(x => x.Materia).WithMany(x => x.Disciplina)
-                
-             
+                .IsRequired();                         
         }
     }
 }

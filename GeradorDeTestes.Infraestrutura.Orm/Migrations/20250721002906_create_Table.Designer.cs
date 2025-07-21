@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeTestesDbContext))]
-    [Migration("20250720213219_Upd-TBQuestao")]
-    partial class UpdTBQuestao
+    [Migration("20250721002906_create_Table")]
+    partial class create_Table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Disciplina");
+                    b.ToTable("Disciplinas");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloMateria.Materia", b =>
@@ -59,7 +59,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Materia");
+                    b.ToTable("Materias");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Alternativa", b =>

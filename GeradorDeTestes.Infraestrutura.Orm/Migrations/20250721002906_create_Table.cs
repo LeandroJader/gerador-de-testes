@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdTBQuestao : Migration
+    public partial class create_Table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Disciplina",
+                name: "Disciplinas",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -20,11 +20,11 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Disciplina", x => x.Id);
+                    table.PrimaryKey("PK_Disciplinas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Materia",
+                name: "Materias",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -34,7 +34,7 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materia", x => x.Id);
+                    table.PrimaryKey("PK_Materias", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,9 +49,9 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 {
                     table.PrimaryKey("PK_Questoes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questoes_Materia_MateriaId",
+                        name: "FK_Questoes_Materias_MateriaId",
                         column: x => x.MateriaId,
-                        principalTable: "Materia",
+                        principalTable: "Materias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -94,13 +94,13 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                 name: "Alternativas");
 
             migrationBuilder.DropTable(
-                name: "Disciplina");
+                name: "Disciplinas");
 
             migrationBuilder.DropTable(
                 name: "Questoes");
 
             migrationBuilder.DropTable(
-                name: "Materia");
+                name: "Materias");
         }
     }
 }
