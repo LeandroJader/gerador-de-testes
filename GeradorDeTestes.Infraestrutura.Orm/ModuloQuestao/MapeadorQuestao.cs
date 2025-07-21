@@ -12,8 +12,7 @@ public class MapeadorQuestao : IEntityTypeConfiguration<Questao>
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.Property(x => x.Materia)
-            .IsRequired();
+        builder.HasOne(x => x.Materia);
 
         builder.Property(x => x.Enunciado)
             .HasMaxLength(300)

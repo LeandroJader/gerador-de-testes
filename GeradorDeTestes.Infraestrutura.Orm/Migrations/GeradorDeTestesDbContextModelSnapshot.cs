@@ -93,11 +93,12 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Materia")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("MateriaId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MateriaId");
 
                     b.ToTable("Questoes");
                 });
@@ -181,6 +182,17 @@ namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloDisciplina.Disciplina", b =>
                 {
                     b.Navigation("Materias");
+                });
+
+            modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>
+                {
+                    b.HasOne("GeradorDeTestes.Dominio.ModuloMateria.Materia", "Materia")
+                        .WithMany()
+                        .HasForeignKey("MateriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Materia");
                 });
 
             modelBuilder.Entity("GeradorDeTestes.Dominio.ModuloQuestao.Questao", b =>

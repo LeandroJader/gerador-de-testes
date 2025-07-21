@@ -1,5 +1,7 @@
-﻿using GeradorDeTestes.Dominio.ModuloQuestao;
+﻿using GeradorDeTestes.Dominio.ModuloMateria;
+using GeradorDeTestes.Dominio.ModuloQuestao;
 using GeradorDeTestes.WebApp.Extensions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace GeradorDeTestes.WebApp.Models;
@@ -7,8 +9,9 @@ namespace GeradorDeTestes.WebApp.Models;
 public abstract class FormularioQuestaoViewModel
 {
     [Required(ErrorMessage = "O campo \"Matéria\" é obrigatório.")]
-    public string Materia { get; set; }
-    
+    public Guid MateriaId { get; set; }
+    public List<SelectListItem> MateriasDisponiveis { get; set; } = new List<SelectListItem>();
+
     [Required(ErrorMessage = "O campo \"Enunciado\" é obrigatório.")]
     [MinLength(8, ErrorMessage = "O campo \"Enunciado\" precisa conter ao menos 8 caracteres.")]
     [MaxLength(300, ErrorMessage = "O campo \"Enunciado\" precisa conter no máximo 300 caracteres.")]
@@ -21,13 +24,37 @@ public class CadastrarQuestaoViewModel : FormularioQuestaoViewModel
 
     public CadastrarQuestaoViewModel() { }
 
+    public CadastrarQuestaoViewModel(List<Materia> materias) : this()
+    {
+        foreach (var m in materias)
+        {
+            var materiaDisponivel = new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            };
+
+            MateriasDisponiveis.Add(materiaDisponivel);
+        }
+    }
+
     public CadastrarQuestaoViewModel(
-        string materia,
+        List<Materia> materias,
         string enunciado,
         List<Alternativa> alternativas) : this()
     {
-        Materia = materia;
         Enunciado = enunciado;
+
+        foreach (var m in materias)
+        {
+            var materiaDisponivel = new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            };
+
+            MateriasDisponiveis.Add(materiaDisponivel);
+        }
 
         if (alternativas is null) return;
         
@@ -49,20 +76,35 @@ public class CadastrarQuestaoViewModel : FormularioQuestaoViewModel
 public class EditarQuestaoViewModel : FormularioQuestaoViewModel
 {
     public Guid Id { get; set; }
+
     public List<AlternativaViewModel> Alternativas { get; set; } = new List<AlternativaViewModel>();
 
     public EditarQuestaoViewModel() { }
 
     public EditarQuestaoViewModel(
         Guid id,
-        string materia,
+        List<Materia> materias,
+        Guid materiaId,
         string enunciado,
         List<Alternativa> alternativas) : this()
     {
         Id = id;
-        Materia = materia;
         Enunciado = enunciado;
+        MateriaId = materiaId;
+
+        foreach (var m in materias)
+        {
+            var materiaDisponivel = new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Nome
+            };
+
+            MateriasDisponiveis.Add(materiaDisponivel);
+        }
+
         if (alternativas is null) return;
+        
         for (int i = 0; i < alternativas.Count; i++)
         {
             var letraEscolhida = (char)('a' + i);
