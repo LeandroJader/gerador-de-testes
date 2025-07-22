@@ -32,7 +32,6 @@ public class FormularioTesteViewModel
     [ValidateNever]
     public List<Disciplina> Disciplinas { get; set; }
 
-    [Required(ErrorMessage = "A matéria é obrigatória.")]
     public Guid? MateriaId { get; set; }
 
     public Materia? Materia { get; set; }

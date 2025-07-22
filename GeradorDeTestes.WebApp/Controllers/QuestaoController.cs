@@ -66,18 +66,8 @@ public class QuestaoController : Controller
         if (cadastrarVM.Alternativas.Count(a => a.Correta) != 1)
             ModelState.AddModelError("CadastroUnico", "É necessário cadastrar exatamente uma alternativa correta.");
 
-        var materias = repositorioMateria.SelecionarRegistros();
-
         if (!ModelState.IsValid)
-        {
-            cadastrarVM.MateriasDisponiveis = materias.Select(m => new SelectListItem
-            {
-                Value = m.Id.ToString(),
-                Text = m.Nome
-            }).ToList();
-
             return View(cadastrarVM);
-        }
 
         var transacao = contexto.Database.BeginTransaction();
 
@@ -86,6 +76,8 @@ public class QuestaoController : Controller
             var alternativas = cadastrarVM.Alternativas
                 .Select(a => a.ParaEntidade())
                 .ToList();
+
+            var materias = repositorioMateria.SelecionarRegistros();
 
             var entidade = cadastrarVM.ParaEntidade(alternativas, materias);
 
