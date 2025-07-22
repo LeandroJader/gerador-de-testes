@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_Tables : Migration
+    public partial class config : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

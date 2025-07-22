@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorDeTestes.Infraestrutura.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeTestesDbContext))]
-    [Migration("20250722165423_Create_Tables")]
-    partial class Create_Tables
+    [Migration("20250722194436_config")]
+    partial class config
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
