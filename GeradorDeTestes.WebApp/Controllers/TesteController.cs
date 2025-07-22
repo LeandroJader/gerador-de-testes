@@ -297,7 +297,11 @@ public class TesteController : Controller
 
         PdfGenerator.GerarPdfSemGabarito(detalhesVM);
 
-        return RedirectToAction("Detalhes", new { id });
+        var nomeArquivo = $"{detalhesVM.Titulo}.pdf";
+        var caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "testes", nomeArquivo);
+
+        var bytes = System.IO.File.ReadAllBytes(caminhoCompleto);
+        return File(bytes, "application/pdf", nomeArquivo);
     }
 
     [HttpGet("gerar-pdf-com-gabarito/{id:guid}")]
@@ -328,7 +332,11 @@ public class TesteController : Controller
 
         PdfGenerator.GerarPdfComGabarito(detalhesVM);
 
-        return RedirectToAction("Detalhes", new { id });
+        var nomeArquivo = $"{detalhesVM.Titulo} - Gabarito.pdf";
+        var caminhoCompleto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "testes", nomeArquivo);
+
+        var bytes = System.IO.File.ReadAllBytes(caminhoCompleto);
+        return File(bytes, "application/pdf", nomeArquivo);
     }
 
 }

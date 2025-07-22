@@ -16,7 +16,8 @@ public class FormularioMateriaViewModel
     [Required(ErrorMessage = "O campo \"Série\" é obrigatório.")]
     public Serie Serie { get; set; }
 
-    public Guid? DisciplinaId { get; set; }
+    [Required(ErrorMessage = "O campo \"Disciplina\" é obrigatório.")]
+    public Guid DisciplinaId { get; set; }
 
     [ValidateNever]
     public List<Disciplina> Disciplinas { get; set; }
