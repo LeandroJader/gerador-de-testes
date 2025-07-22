@@ -8,8 +8,10 @@ namespace GeradorDeTestes.WebApp.Services;
 
 public static class PdfGenerator
 {
-    public static void GerarPdfSemGabarito(DetalhesTesteViewModel model)
+    public static byte[] GerarPdfSemGabarito(DetalhesTesteViewModel model)
     {
+        using var stream = new MemoryStream();
+
         var pdf = Document.Create(container =>
         {
             container.Page(page =>
@@ -62,20 +64,15 @@ public static class PdfGenerator
             });
         });
 
+        pdf.GeneratePdf(stream);
 
-        var nomeArquivo = $"{model.Titulo}.pdf";
-        var caminhoPasta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "testes");
-
-        if (!Directory.Exists(caminhoPasta))
-            Directory.CreateDirectory(caminhoPasta);
-
-        var caminhoCompleto = Path.Combine(caminhoPasta, nomeArquivo);
-
-        pdf.GeneratePdf(caminhoCompleto);
+        return stream.ToArray();
     }
 
-    public static void GerarPdfComGabarito(DetalhesTesteViewModel model)
+    public static byte[] GerarPdfComGabarito(DetalhesTesteViewModel model)
     {
+        using var stream = new MemoryStream();
+
         var pdf = Document.Create(container =>
         {
             container.Page(page =>
@@ -134,15 +131,8 @@ public static class PdfGenerator
             });
         });
 
-        var nomeArquivo = $"{model.Titulo} - Gabarito.pdf";
-        var caminhoPasta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "testes");
+        pdf.GeneratePdf(stream);
 
-        if (!Directory.Exists(caminhoPasta))
-            Directory.CreateDirectory(caminhoPasta);
-
-        var caminhoCompleto = Path.Combine(caminhoPasta, nomeArquivo);
-
-        pdf.GeneratePdf(caminhoCompleto);
+        return stream.ToArray();
     }
-
 }

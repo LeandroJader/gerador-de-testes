@@ -295,9 +295,11 @@ public class TesteController : Controller
             QuestoesSorteadas = questoes
         };
 
-        PdfGenerator.GerarPdfSemGabarito(detalhesVM);
+        var pdfBytes = PdfGenerator.GerarPdfSemGabarito(detalhesVM);
 
-        return RedirectToAction("Detalhes", new { id });
+        var fileName = $"{detalhesVM.Titulo}.pdf";
+
+        return File(pdfBytes, "application/pdf");
     }
 
     [HttpGet("gerar-pdf-com-gabarito/{id:guid}")]
@@ -326,9 +328,10 @@ public class TesteController : Controller
             QuestoesSorteadas = questoes
         };
 
-        PdfGenerator.GerarPdfComGabarito(detalhesVM);
+        var pdfBytes = PdfGenerator.GerarPdfComGabarito(detalhesVM);
 
-        return RedirectToAction("Detalhes", new { id });
+        var fileName = $"{detalhesVM.Titulo} - Gabarito.pdf";
+
+        return File(pdfBytes, "application/pdf");
     }
-
 }
