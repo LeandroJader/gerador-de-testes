@@ -18,15 +18,14 @@ public static class PdfGenerator
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
-                page.DefaultTextStyle(x => x.FontSize(14));
-
-                page.Header()
-                    .Text(model.Titulo)
-                    .SemiBold().FontSize(24).FontColor(Colors.Black);
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Content()
                     .Column(col =>
                     {
+                        col.Item().Text(model.Titulo)
+                            .AlignCenter().Bold().FontSize(16);
+
                         col.Spacing(15);
 
                         col.Item().Text($"Disciplina: {model.Disciplina}");
@@ -41,7 +40,7 @@ public static class PdfGenerator
                             col.Item().Text(texto =>
                             {
                                 texto.Span($"{numeroQuestao++}) {questao.Enunciado}")
-                                    .Bold().FontSize(16);
+                                    .Bold().FontSize(14);
                             });
 
 
@@ -79,15 +78,14 @@ public static class PdfGenerator
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);
-                page.DefaultTextStyle(x => x.FontSize(14));
-
-                page.Header()
-                    .Text(model.Titulo + " (com Gabarito)")
-                    .SemiBold().FontSize(24).FontColor(Colors.Black);
+                page.DefaultTextStyle(x => x.FontSize(12));
 
                 page.Content()
                     .Column(col =>
                     {
+                        col.Item().Text($"{model.Titulo} (com Gabarito)")
+                            .AlignCenter().Bold().FontSize(16);
+
                         col.Spacing(15);
 
                         col.Item().Text($"Disciplina: {model.Disciplina}");
@@ -102,7 +100,7 @@ public static class PdfGenerator
                             col.Item().Text(texto =>
                             {
                                 texto.Span($"{numeroQuestao++}) {questao.Enunciado}")
-                                    .Bold().FontSize(16);
+                                    .Bold().FontSize(14);
                             });
 
                             foreach (var (alternativa, i) in questao.Alternativas.Select((alt, idx) => (alt, idx)))
